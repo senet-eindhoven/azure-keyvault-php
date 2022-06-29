@@ -8,6 +8,11 @@
             "Senet\\AzureKeyVault\\": "src/"
         }
     },
+    "autoload-dev": {
+      "psr-4": {
+        "Senet\\AzureKeyVault\\": "tests/"
+      }
+    },
     "authors": [
         {
             "name": "Pim Jansen",
@@ -20,6 +25,7 @@
     },
     "require-dev": {
         "symfony/var-dumper": "^6.1",
-        "symfony/yaml": "^6.1"
+        "symfony/yaml": "^6.1",
+        "phpunit/phpunit": "^9.5"
     }
 }
