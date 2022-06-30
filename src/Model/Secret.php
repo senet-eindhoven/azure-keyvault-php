@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Senet\AzureKeyVault\Model;
@@ -17,7 +18,8 @@ final class Secret
         private ?DateTimeInterface $exp = null,
         private ?string $contentType = null,
         private ?array $tags = [],
-    ) {}
+    ) {
+    }
 
     public function getId(): string
     {

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Senet\AzureKeyVault\Repository;
 
-use GuzzleHttp\ClientInterface;
+use Psr\Http\Client\ClientInterface;
 use GuzzleHttp\Exception\ClientException;
 use Senet\AzureKeyVault\Exception\NotFoundException;
 use Senet\AzureKeyVault\Mapper\DataToSecret;
@@ -19,14 +19,14 @@ class SecretRepository
         private string $token,
         private string $vaultUrl,
         private string $apiVersion,
-    )
-    {}
+    ) {
+    }
 
     private function request(
         string $endpoint,
         string $method,
     ) {
-        $response = $this->client->request($method, $endpoint, [
+        $response = $this->client->$method($endpoint, [
             'headers' => [
                 'Authorization' => 'Bearer ' . $this->token,
             ],
@@ -49,11 +49,10 @@ class SecretRepository
                 $list[] = DataToSecretList::map($secretData);
             }
             return $list;
-
         } catch (ClientException $e) {
             switch ($e->getCode()) {
                 case 404:
-                    throw NotFoundException::secretWithId($id);
+                    throw new NotFoundException();
                 default:
                     throw $e;
             }
@@ -71,7 +70,6 @@ class SecretRepository
             );
             $data = $this->request($endpoint, 'get');
             return DataToSecret::map($data);
-
         } catch (ClientException $e) {
             switch ($e->getCode()) {
                 case 404:
@@ -80,10 +78,5 @@ class SecretRepository
                     throw $e;
             }
         }
-    }
-
-    public function getSecretVersions(): iterable
-    {
-
     }
 }

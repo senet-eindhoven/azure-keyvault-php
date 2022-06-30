@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Senet\AzureKeyVault\Model;
@@ -8,7 +9,8 @@ final class Tag
     public function __construct(
         private string $key,
         private string $value,
-    ) {}
+    ) {
+    }
 
     public function getKey(): string
     {

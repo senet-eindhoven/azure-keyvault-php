@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Senet\AzureKeyVault\Model;
@@ -13,7 +14,8 @@ final class SecretList
         private DateTimeInterface $updated,
         private ?DateTimeInterface $nbf = null,
         private ?DateTimeInterface $exp = null,
-    ) {}
+    ) {
+    }
 
     public function getId(): string
     {

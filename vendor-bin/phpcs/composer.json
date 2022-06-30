@@ -1,0 +1,14 @@
+{
+    "require": {
+        "php": "^8.1",
+        "squizlabs/php_codesniffer": "*",
+        "slevomat/coding-standard": "*"
+    },
+    "config": {
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    }
+}

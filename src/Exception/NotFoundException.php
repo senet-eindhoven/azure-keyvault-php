@@ -1,10 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Senet\AzureKeyVault\Exception;
 
 use RuntimeException;
-use Throwable;
 
 final class NotFoundException extends RuntimeException
 {

@@ -13,6 +13,8 @@ final class KeyVault
 {
     private ClientInterface $client;
 
+    private string $token;
+
     public function __construct(
         string $tenantName,
         private string $vaultUrl,
@@ -36,7 +38,7 @@ final class KeyVault
             $token = $response->getBody()->getContents();
             $this->token = json_decode($token, true)['access_token'];
         } catch (ClientException $e) {
-            throw new $e;
+            throw new $e();
         }
     }
 

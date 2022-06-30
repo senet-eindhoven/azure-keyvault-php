@@ -9,7 +9,8 @@ down: ## Stop container
 	docker-compose down
 
 install: ## Install dependencies
-	docker-compose exec -T app composer install
+	docker-compose exec -T phpfpm composer install
+	docker-compose exec -T phpfpm composer bin all install --no-interaction
 
 login: ## Login to the container
 	docker-compose exec phpfpm sh

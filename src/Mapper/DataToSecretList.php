@@ -17,10 +17,10 @@ final class DataToSecretList
             Helper::timestampToDateTimeImmutable($data['attributes']['updated']),
             isset($data['attributes']['nbf']) ? Helper::timestampToDateTimeImmutable(
                 $data['attributes']['nbf']
-            ):null,
+            ) : null,
             isset($data['attributes']['exp']) ? Helper::timestampToDateTimeImmutable(
                 $data['attributes']['exp']
-            ):null,
+            ) : null,
         );
     }
 }
