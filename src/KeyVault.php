@@ -5,52 +5,97 @@ declare(strict_types=1);
 namespace Senet\AzureKeyVault;
 
 use Exception;
-use GuzzleHttp\Client;
-use GuzzleHttp\ClientInterface;
-use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Psr7\Request;
+use InvalidArgumentException;
+use Psr\Http\Client\ClientExceptionInterface;
+use Psr\Http\Client\ClientInterface;
+use Webmozart\Assert\Assert;
 
 class KeyVault
 {
-    protected ClientInterface $client;
+    protected const API_VERSION = '7.3';
 
-    protected string $token;
+    protected string $accessToken;
 
     public function __construct(
         string $tenantName,
         protected string $vaultUrl,
         string $clientId,
         string $clientSecret,
-        protected string $apiVersion = '7.3',
+        protected ClientInterface $client,
+        private array $options = [],
     ) {
         try {
-            $this->client = new Client();
-            $response = $this->client->post(
+            $this->validateOptions($this->options);
+            $request = new Request(
+                'POST',
                 sprintf('https://login.microsoftonline.com/%s.onmicrosoft.com/oauth2/v2.0/token', $tenantName),
-                [
-                    'form_params' => [
-                        'client_id' => $clientId,
-                        'client_secret' => $clientSecret,
-                        'scope' => 'https://vault.azure.net/.default',
-                        'grant_type' => 'client_credentials',
-                    ],
-                ]
+                [],
+                \http_build_query([
+                    'client_id' => $clientId,
+                    'client_secret' => $clientSecret,
+                    'scope' => 'https://vault.azure.net/.default',
+                    'grant_type' => 'client_credentials',
+                ]),
             );
+            $response = $this->client->sendRequest($request);
             $token = $response->getBody()->getContents();
-            $this->token = json_decode($token, true)['access_token'];
-        } catch (ClientException | Exception $e) {
-            throw new $e();
+            $this->accessToken = json_decode($token, true)['access_token'];
+        } catch (ClientExceptionInterface | Exception $e) {
+            throw $e;
         }
+    }
+
+    public function getAccessToken(): string
+    {
+        return $this->accessToken;
+    }
+
+    private function validateOptions(array $options): void
+    {
+        foreach ($options as $option => $value) {
+            switch ($option) {
+                case 'api-version':
+                    Assert::string($value, 'api-version requires `string`');
+                    Assert::notEmpty($value, 'api-version cannot be empty');
+                    break;
+                default:
+                    throw new InvalidArgumentException(
+                        sprintf(
+                            'invalid option `%s` given',
+                            $option
+                        )
+                    );
+            }
+        }
+    }
+
+    public function getApiVersion(): string
+    {
+        if (isset($this->options['api-version']) === true) {
+            return $this->options['api-version'];
+        }
+
+        return self::API_VERSION;
     }
 
     protected function request(
         string $endpoint,
         string $method,
     ) {
-        $response = $this->client->$method($endpoint, [
-            'headers' => [
-                'Authorization' => 'Bearer ' . $this->token,
+        $request = new Request(
+            $method,
+            $endpoint,
+            [
+                'Authorization' => 'Bearer ' . $this->accessToken,
             ],
-        ]);
-        return json_decode($response->getBody()->getContents(), true);
+        );
+        $response = $this->client->sendRequest($request);
+        $content = json_decode($response->getBody()->getContents(), true);
+        if ($response->getStatusCode() !== 200) {
+            throw new RequestException($content['error']['message'], $request, $response);
+        }
+        return $content;
     }
 }

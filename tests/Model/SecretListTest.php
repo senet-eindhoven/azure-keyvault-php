@@ -13,12 +13,14 @@ class SecretListTest extends TestCase
         $date = new \DateTimeImmutable('2022-07-01 10:11:12');
         $model = new SecretList(
             'id',
+            true,
             $date,
             $date,
             $date,
             $date
         );
         $this->assertEquals('id', $model->getId());
+        $this->assertTrue($model->isEnabled());
         $this->assertEquals($date->getTimestamp(), $model->getCreated()->getTimestamp());
         $this->assertEquals($date->getTimestamp(), $model->getUpdated()->getTimestamp());
         $this->assertEquals($date->getTimestamp(), $model->getNbf()->getTimestamp());

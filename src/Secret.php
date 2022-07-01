@@ -18,7 +18,7 @@ class Secret extends KeyVault
     {
         try {
             $endpoint = sprintf(
-                '%s/secrets?api-version=' . $this->apiVersion,
+                '%s/secrets?api-version=' . $this->getApiVersion(),
                 $this->vaultUrl,
             );
             $data = $this->request($endpoint, 'get');
@@ -42,7 +42,7 @@ class Secret extends KeyVault
     {
         try {
             $endpoint = sprintf(
-                '%s/secrets/%s/%s?api-version=' . $this->apiVersion,
+                '%s/secrets/%s/%s?api-version=' . $this->getApiVersion(),
                 $this->vaultUrl,
                 $id,
                 $version,
