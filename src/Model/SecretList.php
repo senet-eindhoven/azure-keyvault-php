@@ -6,10 +6,13 @@ namespace Senet\AzureKeyVault\Model;
 
 use DateTimeInterface;
 
-final class SecretList
+class SecretList
 {
+    use UsableTrait;
+
     public function __construct(
         private string $id,
+        private bool $enabled,
         private DateTimeInterface $created,
         private DateTimeInterface $updated,
         private ?DateTimeInterface $nbf = null,
@@ -40,5 +43,10 @@ final class SecretList
     public function getExp(): ?DateTimeInterface
     {
         return $this->exp;
+    }
+
+    public function isEnabled(): bool
+    {
+        return $this->enabled;
     }
 }

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Senet\AzureKeyVault\Exception;
 
-use RuntimeException;
+use Exception;
 
-final class NotFoundException extends RuntimeException
+class NotFoundException extends Exception
 {
     public static function secretWithId(string $id): self
     {

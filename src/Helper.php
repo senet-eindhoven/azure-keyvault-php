@@ -6,7 +6,7 @@ namespace Senet\AzureKeyVault;
 
 use DateTimeImmutable;
 
-final class Helper
+class Helper
 {
     public static function timestampToDateTimeImmutable(int $timestamp): DateTimeImmutable
     {

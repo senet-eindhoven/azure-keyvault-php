@@ -7,7 +7,7 @@ namespace Senet\AzureKeyVault\Mapper;
 use Senet\AzureKeyVault\Helper;
 use Senet\AzureKeyVault\Model\Secret;
 
-final class DataToSecret
+class DataToSecret
 {
     public static function map(array $data): Secret
     {

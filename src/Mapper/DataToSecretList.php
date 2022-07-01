@@ -7,12 +7,13 @@ namespace Senet\AzureKeyVault\Mapper;
 use Senet\AzureKeyVault\Helper;
 use Senet\AzureKeyVault\Model\SecretList;
 
-final class DataToSecretList
+class DataToSecretList
 {
     public static function map(array $data): SecretList
     {
         return new SecretList(
             $data['id'],
+            $data['attributes']['enabled'],
             Helper::timestampToDateTimeImmutable($data['attributes']['created']),
             Helper::timestampToDateTimeImmutable($data['attributes']['updated']),
             isset($data['attributes']['nbf']) ? Helper::timestampToDateTimeImmutable(

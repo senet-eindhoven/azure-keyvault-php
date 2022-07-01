@@ -2,38 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Senet\AzureKeyVault\Repository;
+namespace Senet\AzureKeyVault;
 
-use Psr\Http\Client\ClientInterface;
 use GuzzleHttp\Exception\ClientException;
 use Senet\AzureKeyVault\Exception\NotFoundException;
 use Senet\AzureKeyVault\Mapper\DataToSecret;
 use Senet\AzureKeyVault\Mapper\DataToSecretList;
-use Senet\AzureKeyVault\Model\Secret;
+use Senet\AzureKeyVault\Model\Secret as SecretModel;
 use Senet\AzureKeyVault\Model\SecretList;
 
-class SecretRepository
+class Secret extends KeyVault
 {
-    public function __construct(
-        private ClientInterface $client,
-        private string $token,
-        private string $vaultUrl,
-        private string $apiVersion,
-    ) {
-    }
-
-    private function request(
-        string $endpoint,
-        string $method,
-    ) {
-        $response = $this->client->$method($endpoint, [
-            'headers' => [
-                'Authorization' => 'Bearer ' . $this->token,
-            ],
-        ]);
-        return json_decode($response->getBody()->getContents(), true);
-    }
-
     /** @return SecretList[] */
     public function listSecrets(): iterable
     {
@@ -59,7 +38,7 @@ class SecretRepository
         }
     }
 
-    public function getSecret(string $id, string $version = null): ?Secret
+    public function getSecret(string $id, string $version = null): SecretModel
     {
         try {
             $endpoint = sprintf(

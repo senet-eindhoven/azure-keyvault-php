@@ -4,23 +4,23 @@ declare(strict_types=1);
 
 namespace Senet\AzureKeyVault;
 
+use Exception;
 use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\ClientException;
-use Psr\Http\Client\ClientInterface;
-use Senet\AzureKeyVault\Repository\SecretRepository;
 
-final class KeyVault
+class KeyVault
 {
-    private ClientInterface $client;
+    protected ClientInterface $client;
 
-    private string $token;
+    protected string $token;
 
     public function __construct(
         string $tenantName,
-        private string $vaultUrl,
+        protected string $vaultUrl,
         string $clientId,
         string $clientSecret,
-        private string $apiVersion = '7.3',
+        protected string $apiVersion = '7.3',
     ) {
         try {
             $this->client = new Client();
@@ -37,18 +37,20 @@ final class KeyVault
             );
             $token = $response->getBody()->getContents();
             $this->token = json_decode($token, true)['access_token'];
-        } catch (ClientException $e) {
+        } catch (ClientException | Exception $e) {
             throw new $e();
         }
     }
 
-    public function getSecretRepository(): SecretRepository
-    {
-        return new SecretRepository(
-            $this->client,
-            $this->token,
-            $this->vaultUrl,
-            $this->apiVersion,
-        );
+    protected function request(
+        string $endpoint,
+        string $method,
+    ) {
+        $response = $this->client->$method($endpoint, [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $this->token,
+            ],
+        ]);
+        return json_decode($response->getBody()->getContents(), true);
     }
 }

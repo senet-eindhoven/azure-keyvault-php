@@ -6,8 +6,10 @@ namespace Senet\AzureKeyVault\Model;
 
 use DateTimeInterface;
 
-final class Secret
+class Secret
 {
+    use UsableTrait;
+
     public function __construct(
         private string $id,
         private string $value,
