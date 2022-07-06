@@ -3,7 +3,7 @@
 # Install
 
 ```
-composer require senet/azure-keyvault-php
+composer require senet-eindhoven/azure-keyvault-php
 ```
 # Usage
 
@@ -22,5 +22,16 @@ $keyvault = new Secret(
 echo $keyvault->getSecret('my-secret')->getValue();
 ```
 
-## Api documentation
+## Support
+
+This library does not support the full usage of the `Azure KeyVault` yet. Below a list of the supported service
+
+| Type        | Support    | Comment                                             |
+|-------------|------------|-----------------------------------------------------|
+| Secret      | Partially  | Only retrieving and listing of Secrets is supported |
+| Certificate | No         |                                                     |
+| Keys        | No         |                                                     |
+
+## External Api documentation
+
 https://docs.microsoft.com/en-us/rest/api/keyvault/

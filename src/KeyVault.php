@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Senet\AzureKeyVault;
 
 use Exception;
-use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Request;
 use InvalidArgumentException;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
+use Senet\AzureKeyVault\Exception\RequestException;
 use Webmozart\Assert\Assert;
 
 class KeyVault
@@ -83,7 +83,7 @@ class KeyVault
     protected function request(
         string $endpoint,
         string $method,
-    ) {
+    ): array {
         $request = new Request(
             $method,
             $endpoint,

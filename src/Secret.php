@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Senet\AzureKeyVault;
 
-use GuzzleHttp\Exception\ClientException;
+use Psr\Http\Client\RequestExceptionInterface;
 use Senet\AzureKeyVault\Exception\NotFoundException;
 use Senet\AzureKeyVault\Mapper\DataToSecret;
 use Senet\AzureKeyVault\Mapper\DataToSecretList;
@@ -21,14 +21,14 @@ class Secret extends KeyVault
                 '%s/secrets?api-version=' . $this->getApiVersion(),
                 $this->vaultUrl,
             );
-            $data = $this->request($endpoint, 'get');
+            $data = $this->request($endpoint, 'GET');
 
             $list = [];
             foreach ($data['value'] as $secretData) {
                 $list[] = DataToSecretList::map($secretData);
             }
             return $list;
-        } catch (ClientException $e) {
+        } catch (RequestExceptionInterface $e) {
             switch ($e->getCode()) {
                 case 404:
                     throw new NotFoundException();
@@ -47,9 +47,9 @@ class Secret extends KeyVault
                 $id,
                 $version,
             );
-            $data = $this->request($endpoint, 'get');
+            $data = $this->request($endpoint, 'GET');
             return DataToSecret::map($data);
-        } catch (ClientException $e) {
+        } catch (RequestExceptionInterface $e) {
             switch ($e->getCode()) {
                 case 404:
                     throw NotFoundException::secretWithId($id);
