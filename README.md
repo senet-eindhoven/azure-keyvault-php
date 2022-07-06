@@ -17,7 +17,7 @@ $keyvault = new Secret(
     'https://my-keyvault-entity.vault.azure.net/',
     'clienId',
     'clientSecret',
-    new \GuzzleHttp\Client(),
+    new \GuzzleHttp\Client(), // Any PSR ClientInterface
 );
 echo $keyvault->getSecret('my-secret')->getValue();
 ```
