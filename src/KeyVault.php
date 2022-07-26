@@ -30,7 +30,7 @@ class KeyVault
             $this->validateOptions($this->options);
             $request = new Request(
                 'POST',
-                sprintf('https://login.microsoftonline.com/%s.onmicrosoft.com/oauth2/v2.0/token', $tenantName),
+                sprintf('https://login.microsoftonline.com/%s/oauth2/v2.0/token', $tenantName),
                 [],
                 \http_build_query([
                     'client_id' => $clientId,
