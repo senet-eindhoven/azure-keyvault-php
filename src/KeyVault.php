@@ -41,7 +41,16 @@ class KeyVault
             );
             $response = $this->client->sendRequest($request);
             $token = $response->getBody()->getContents();
-            $this->accessToken = json_decode($token, true)['access_token'];
+            $decoded = json_decode($token, true);
+            if (isset($decoded['access_token']) === false) {
+                throw new Exception(
+                    sprintf(
+                        'Invalid token received: %s',
+                        var_export($token)
+                    )
+                );
+            }
+            $this->accessToken = $decoded['access_token'];
         } catch (ClientExceptionInterface | Exception $e) {
             throw $e;
         }
